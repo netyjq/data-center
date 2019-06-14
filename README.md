@@ -52,7 +52,7 @@ SELECT * from unit_info where 1=1 and parent_id = 1
 - alarm_history 告警记录表 **分多表**
 - alarm_config 告警配置表
 
-![](http://ww1.sinaimg.cn/large/c9025ee6ly1g2zwg31blzj21ke10ytkx.jpg)
+![表结构设计](script/table.jpg)
 
 #### 项目模块
 
