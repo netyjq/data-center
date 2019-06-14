@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.ISqlOperationRecordMapper">
+
+    <resultMap id="SqlOperationRecordResultMap" type="SqlOperationRecord">
+        <result column="id" property="id"/>
+        <result column="sql_id" property="sqlId"/>
+        <result column="operator_id" property="operatorId"/>
+        <result column="operator_name" property="operatorName"/>
+        <result column="type" property="type"/>
+        <result column="create_time" property="createTime"/>
+        <result column="sqltext_before" property="sqltextBefore"/>
+        <result column="sqltext_after" property="sqltextAfter"/>
+        <result column="page_before" property="pageBefore"/>
+        <result column="page_after" property="pageAfter"/>
+        <result column="parameter_mapping_before" property="parameterMappingBefore"/>
+        <result column="parameter_mapping_after" property="parameterMappingAfter"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="SqlOperationRecordResultMap">
+        select * from sql_operation_record
+        <where>
+            <if test="sqlId != null">
+                sql_id = #{sqlId}
+            </if>
+            <if test="operatorId != null">
+                and operator_id = #{operatorId}
+            </if>
+            <if test="type != null">
+                and type = #{type}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <select id="selectAll" resultMap="SqlOperationRecordResultMap">
+        select * from sql_operation_record
+    </select>
+
+    <insert id="insertOne" parameterType="SqlOperationRecord">
+        insert into sql_operation_record (sql_id, operator_id, operator_name, type, create_time, sqltext_before,
+        sqltext_after, page_before, page_after, parameter_mapping_before, parameter_mapping_after) values (
+            #{sqlId}, #{operatorId}, #{operatorName}, #{type}, #{createTime}, #{sqltextBefore}, #{sqltextAfter},
+            #{pageBefore}, #{pageAfter}, #{parameterMappingBefore}, #{parameterMappingAfter}
+        )
+    </insert>
+
+</mapper>

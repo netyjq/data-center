@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>数据中心</title>
+    <link href="layui/css/layui.css" rel="stylesheet">
+    <meta charset="utf-8">
+</head>
+<body class=>
+<div class="layui-layout">
+    <!-- 通用导航 -->
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="layui-header  layui-bg-cyan">
+            <div class="layui-logo">317护数据中心后台系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;" id="username">
+                        钱多多
+                    </a>
+                </li>
+                <li class="layui-nav-item" onclick="logout()"><a href="javascript:;">退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-cyan">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" id="nav" lay-filter="navFilter">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div id="body" style="padding: 10px;">
+                <!-- 内容主体区域 -->
+                    <form class="layui-form" action="" id="selectForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="text-align: left">筛选应用</label>
+                            <div class="layui-input-inline">
+                                <select name="modules" id="appSelect" lay-filter="appFilter" lay-verify="required" lay-search="">
+                                    <option value="">无</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            Copyright. Since 2019-05 by yejq
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+<form class="layui-form" action="" id="form" style="display: none; padding: 20px;">
+    <table class="layui-hide" id="userTable" lay-filter="userTable"></table>
+</form>
+
+<form class="layui-form" action="" id="addGroupForm" style="display: none; padding: 20px;">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">应用</label>
+        <div class="layui-input-block">
+            <select name="appId" id="appId" lay-filter="appFilter" lay-verify="required" lay-search="">
+                <option value="">无</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户组</label>
+        <div class="layui-input-block">
+            <select name="userGroupId" id="userGroup" lay-filter="userGroupFilter" lay-verify="required" lay-search="">
+                <option value="">无</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label ruleDesc">规则<i style="font-weight: bold; font-size: 16px"  class="layui-icon">&#xe60b;</i></label>
+        <div class="layui-input-block">
+            <input type="radio" name="rule" value="1" title="慢查询数量SLOW_COUNT" checked="">
+            <input type="radio" name="rule" value="2" title="错误数量ERROR_COUNT">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">阈值</label>
+        <div class="layui-input-block">
+            <input type="number" name="threshold" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="addAlarmConfig">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+</form>
+
+
+<script type="text/html" id="operationBar">
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+</script>
+
+<script type="text/html" id="userOperationBar">
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">移出当前组</a>
+</script>
+<script type="text/html" id="ruleTemplate">
+    {{#  if(d.rule === 1){ }}
+    SLOW_COUNT
+    {{#  } }}
+    {{#  if(d.rule === 2){ }}
+    ERROR_COUNT
+    {{#  } }}
+</script>
+<script type="text/html" id="headToolbar">
+    <div class="layui-table-tool-temp">
+        <div class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="add"><i class="layui-icon layui-icon-add-1"></i> 添加告警配置</div>
+    </div>
+
+</script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    $("#nav").load("nav.html");
+    layui.use(['element', 'layer', 'table', 'form', 'laypage'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var element = layui.element;
+        var form = layui.form;
+        var laypage = layui.laypage;
+        element.render('nav');
+        $("#alarmConfig").find("dd:eq(0)").addClass("layui-this");
+
+        var request = {};
+
+
+
+        // 加载告警配置表格
+        var tableIns = table.render({
+            elem: '#dataTable'
+            , url: '/alarm-config/list'
+            , where: request
+            , toolbar: "#headToolbar"
+            , cols: [[
+                {field: 'id', title: 'id', sort: true}
+                , {field: 'userGroupName', title: '用户组'}
+                , {field: 'appName', title: '应用名称'}
+                , {field: 'rule', title: '规则', width: 135, templet: "#ruleTemplate"}
+                , {field: 'threshold', title: '阈值'}
+                , {field: 'createName', title: '创建人'}
+                , {fixed: 'right', title: 'operation', toolbar: '#operationBar'}
+            ]]
+        });
+
+        // 为下拉框初始化应用列表
+        REQUEST_AJAX.get("/appinfo/list", null, function (data) {
+            for (var i in data.data) {
+                var app = data.data[i];
+                $("#appSelect").append("<option value='"+app.id+"'>"+app.name+"</option>");
+                $("#appId").append("<option value='"+app.id+"'>"+app.name+"</option>");
+            }
+            form.render('select');
+        });
+
+        // 为下拉框初始化用户组列表
+        REQUEST_AJAX.get("/user/group/listAll", null, function (data) {
+            for (var i in data.data) {
+                var group = data.data[i];
+                $("#userGroup").append("<option value='"+group.id+"'>"+group.name+"</option>");
+            }
+            form.render('select');
+        });
+
+        // 监听应用筛选
+        form.on('select(appFilter)', function(data){
+            request.appId = data.value;
+            tableIns.reload({
+                where: request
+            });
+        });
+
+        /**
+         * 新增告警规则
+         */
+        form.on('submit(addAlarmConfig)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            REQUEST_AJAX.get("/alarm-config/insert", request, function (data) {
+                layer.msg("添加成功", {icon: 1, time: 1000});
+                layer.closeAll();
+                tableIns.reload({
+                    where: request
+                });
+            });
+            layer.close(index);
+        });
+
+
+        //监听头工具栏事件
+        table.on('toolbar(dataTable)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 1,
+                        title: '添加告警配置',
+                        area: ['800px', '500px'],
+                        content: $("#addGroupForm")
+                    });
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(dataTable)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                , layEvent = obj.event; //获得 lay-event 对应的值
+            if (layEvent === 'delete') {
+                layer.confirm('确认删除吗？', {
+                    btn: ['确定', '取消']
+                }, function(index, layero){
+                    REQUEST_AJAX.get("/alarm-config/delete", {"id": data.id}, function (data) {
+                        layer.msg("成功移除");
+                        obj.del();
+                    })
+                }, function(index){
+                    //按钮【按钮二】的回调
+                    layer.close(index);
+                });
+            }
+        });
+
+
+        //监听侧边导航点击 应用切换
+        element.on('nav(navFilter)', function (elem) {
+            console.log(elem);
+            var appId = elem.attr("data-id");
+            if (appId !== undefined) {
+                window.location.href = "index.html?appId=" + appId;
+                return;
+            }
+        });
+
+        var tip_index = 0;
+        $(document).on('mouseenter', '.ruleDesc', function(){
+            tip_index = layer.tips('慢查询：响应时间超过5秒的请求即为慢查询；错误：业务方sql模板执行异常', '.ruleDesc', {time: 0});
+        }).on('mouseleave', '.ruleDesc', function(){
+            layer.close(tip_index);
+        });
+
+    });
+</script>

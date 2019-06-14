@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.service.mapper.IUserGroupMappingMapper">
+
+    <resultMap id="UserGroupMappingResultMap" type="UserGroupMapping">
+        <result column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="groupId" property="group_id"/>
+    </resultMap>
+
+    <select id="selectListByGroupId" parameterType="java.util.HashMap" resultMap="UserGroupMappingResultMap">
+        select * from user_group_mapping where user_group_id = #{userGroupId}
+    </select>
+
+
+</mapper>

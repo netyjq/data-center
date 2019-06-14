@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>数据中心</title>
+    <link href="layui/css/layui.css" rel="stylesheet">
+    <meta charset="utf-8">
+</head>
+<body class=>
+<div class="layui-layout">
+    <!-- 通用导航 -->
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="layui-header  layui-bg-cyan">
+            <div class="layui-logo">317护数据中心后台系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;" id="username">
+                        钱多多
+                    </a>
+                </li>
+                <li class="layui-nav-item" onclick="logout()"><a href="javascript:;">退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-cyan">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" id="nav" lay-filter="navFilter">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div id="body" style="padding: 10px;">
+                <!-- 内容主体区域 -->
+                <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            Copyright. Since 2019-05 by yejq
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+<form class="layui-form" action="" id="userForm" style="display: none; padding: 20px;">
+    <table class="layui-hide" id="userTable" lay-filter="userTable"></table>
+</form>
+
+<form class="layui-form" action="" id="appForm" style="display: none; padding: 20px;">
+    <table class="layui-hide" id="appTable" lay-filter="appTable"></table>
+</form>
+
+<form class="layui-form" action="" id="addGroupForm" style="display: none; padding: 20px;">
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" autocomplete="off" placeholder="起个名字15字符以内" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <input type="text" name="description" autocomplete="off" placeholder="简单解释一下用途20字符以内" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" lay-submit="" lay-filter="addGroup">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+
+</form>
+
+<form class="layui-form" action="" id="addMemberForm" style="display: none; padding: 20px;">
+    <div class="layui-form-item" id="members">
+
+    </div>
+    <div class="layui-form-item">
+        <button type="button" class="layui-btn" lay-submit="" lay-filter="addMember">确认提交</button>
+    </div>
+</form>
+
+<form class="layui-form" action="" id="addAppForm" style="display: none; padding: 20px;">
+    <div class="layui-form-item" id="apps">
+
+    </div>
+    <div class="layui-form-item">
+        <button type="button" class="layui-btn" lay-submit="" lay-filter="addApp">确认提交</button>
+    </div>
+</form>
+
+<script type="text/html" id="operationBar">
+    <a class="layui-btn layui-btn-xs" lay-event="detail">查询组成员</a>
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="associateApp">关联应用</a>
+</script>
+
+<script type="text/html" id="userOperationBar">
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">移出当前组</a>
+</script>
+
+<script type="text/html" id="appOperationBar">
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">取消关联</a>
+</script>
+
+<script type="text/html" id="headOperationBar">
+    <div class="layui-table-tool-temp">
+        <div class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="addGroup">
+            <i class="layui-icon layui-icon-add-1"></i> 添加用户组
+        </div>
+    </div>
+</script>
+
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    $("#nav").load("nav.html");
+    layui.use(['element', 'layer','table', 'form'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var element = layui.element;
+        var form = layui.form;
+        element.render('nav');
+        var groupId, addMemberLayerIndex, addMemberTable, addAppTable, addAppLayerIndex, groupName;
+        $("#group").find("dd:eq(0)").addClass("layui-this");
+
+        // 加载用户组表格
+        var tableIns = table.render({
+            elem: '#dataTable'
+            ,url:'/user/group/list'
+            ,where: REQUEST
+            ,toolbar: '#headOperationBar'
+            ,cols: [[
+                {field:'id', title:'id', sort: true}
+                ,{field:'name', title:'名称'}
+                ,{field:'description', title: '简介' }
+                ,{field: 'createTime', title: '创建时间', sort: true}
+                ,{fixed: 'right', title:'operation', toolbar: '#operationBar'}
+            ]]
+        });
+
+        // 加载用户
+        REQUEST_AJAX.get("/userinfo/list", null, function (data) {
+            for (var i in data.data) {
+                var user = data.data[i];
+                $("#members").append(" <input type=\"checkbox\" lay-skin=\"primary\" value=\""+user.id+"\" name=\"userId\" title=\""+user.name+"\">");
+            }
+            form.render();
+        });
+
+        // 加载应用
+        REQUEST_AJAX.get("/appinfo/listAll", null, function (data) {
+            for (var i in data.data) {
+                var app = data.data[i];
+                $("#apps").append(" <input type=\"checkbox\" lay-skin=\"primary\" value=\""+app.id+"\" name=\"appId\" title=\""+app.name+"\">");
+            }
+            form.render();
+        });
+
+
+        //监听头工具栏事件
+        table.on('toolbar(dataTable)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'addGroup':
+                    layer.open({
+                        type: 1,
+                        title: '添加组',
+                        area: ['800px', '500px'],
+                        content: $("#addGroupForm")
+                    });
+                    break;
+            };
+        });
+
+
+
+        // 监听行按钮 "查询组成员按钮" & "关联应用"
+        table.on('tool(dataTable)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = obj.data //获得当前行数据
+                ,layEvent = obj.event; //获得 lay-event 对应的值
+            groupName = obj.data.name;
+            groupId = obj.data.id;
+            if(layEvent === 'detail'){
+                layer.open({
+                    type: 1,
+                    title: '【'+groupName+'】查询组成员',
+                    area: ['800px', '500px'],
+                    content: $("#userForm")
+                });
+                // 加载用户表格
+                addMemberTable = table.render({
+                    elem: '#userTable'
+                    ,url:'/user/group/members'
+                    ,where: {"id": data.id}
+                    ,toolbar: '<div class="layui-table-tool-temp"><div class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="add"><i class="layui-icon layui-icon-add-1"></i> 添加组成员</div></div>'
+                    ,cols: [[
+                        {field:'id', title:'id', sort: true}
+                        ,{field:'name', title:'名称'}
+                        ,{field: 'email', title: '邮箱', width: 200}
+                        ,{fixed: 'right', title:'operation', toolbar: '#userOperationBar'}
+                    ]]
+                });
+
+            } else if(layEvent === 'associateApp'){
+                layer.open({
+                    type: 1,
+                    title: '【'+groupName+'】关联应用',
+                    area: ['800px', '500px'],
+                    content: $("#appForm")
+                });
+                // 加载应用表格
+                addAppTable = table.render({
+                    elem: '#appTable'
+                    ,url:'/appinfo/layui/list'
+                    ,where: {"userGroupId": data.id}
+                    ,toolbar: '<div class="layui-table-tool-temp"><div class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="associate"><i class="layui-icon layui-icon-add-1"></i> 点击添加关联</div></div>'
+                    ,cols: [[
+                        {field:'id', title:'应用id', sort: true}
+                        ,{field:'name', title:'名称'}
+                        ,{fixed: 'right', title:'operation', toolbar: '#appOperationBar'}
+                    ]]
+                });
+
+            }
+        });
+
+        // 弹窗 添加组成员
+        table.on('toolbar(userTable)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'add':
+                    addMemberLayerIndex = layer.open({
+                        type: 1,
+                        title: '【'+groupName+'】添加组成员',
+                        area: ['500px', '500px'],
+                        content: $("#addMemberForm")
+                    });
+                    break;
+            };
+        });
+
+        // 弹窗 关联应用
+        table.on('toolbar(appTable)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'associate':
+                    addAppLayerIndex = layer.open({
+                        type: 1,
+                        title: '【'+groupName+'】关联应用',
+                        area: ['500px', '500px'],
+                        content: $("#addAppForm")
+                    });
+                    break;
+            };
+        });
+
+        /**
+         * 移出当前组
+         */
+        table.on('tool(userTable)', function(obj){
+            var user = obj.data; //获得当前行数据
+            layer.confirm('确认将'+user.name+'移出当前组吗？', {
+                btn: ['确定', '取消']
+            }, function(index, layero){
+                REQUEST_AJAX.get("/user/group/delete-member", {"userId": user.id, "id": groupId}, function (data) {
+                    layer.msg("成功移除");
+                    obj.del();
+                })
+            }, function(index){
+                //按钮【按钮二】的回调
+                layer.close(index);
+            });
+        });
+
+
+        /**
+         * 取消关联
+         */
+        table.on('tool(appTable)', function(obj){
+            var app = obj.data; //获得当前行数据
+            layer.confirm('确认取消关联'+app.name+'当前组吗？', {
+                btn: ['确定', '取消']
+            }, function(index, layero){
+                REQUEST_AJAX.get("/app-user-group-mapping/delete", {"appId": app.id, "userGroupId": groupId}, function (data) {
+                    layer.msg("已成功取消关联");
+                    obj.del();
+                })
+            }, function(index){
+                //按钮【按钮二】的回调
+                layer.close(index);
+            });
+        });
+
+        /**
+         * 新增组
+         */
+        form.on('submit(addGroup)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            REQUEST_AJAX.get("/user/group/insert", request, function (data) {
+                layer.msg("添加成功", {icon: 1, time: 1000});
+                layer.closeAll();
+                tableIns.reload({
+                    where: REQUEST
+                });
+            });
+            layer.close(index);
+        });
+
+
+        /**
+         * 新增组
+         */
+        form.on('submit(add)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            REQUEST_AJAX.get("/user/group/insert", request, function (data) {
+                layer.msg("添加成功", {icon: 1, time: 1000});
+                layer.closeAll();
+                tableIns.reload({
+                    where: REQUEST
+                });
+            });
+            layer.close(index);
+        });
+
+        /**
+         * 新增组成员
+         */
+        form.on('submit(addMember)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            request.id = groupId;
+            var userIdArr = [];
+            $("input[name='userId']:checked").each(function(){
+                userIdArr.push($(this).val());
+            });
+            request.userIds = userIdArr.join(",");
+            REQUEST_AJAX.get("/user/group/add-member", request, function (data) {
+                layer.msg("添加成功", {icon: 1, time: 1000});
+                layer.close(addMemberLayerIndex);
+                addMemberTable.reload();
+            });
+            layer.close(index);
+        });
+
+
+        /**
+         * 新增关联应用
+         */
+        form.on('submit(addApp)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            request.userGroupId = groupId;
+            var appIdArr = [];
+            $("input[name='appId']:checked").each(function(){
+                appIdArr.push($(this).val());
+            });
+            request.appIds = appIdArr.join(",");
+            REQUEST_AJAX.get("/app-user-group-mapping/insert", request, function (data) {
+                layer.msg("添加成功", {icon: 1, time: 1000});
+                layer.close(addAppLayerIndex);
+                addAppTable.reload();
+            });
+            layer.close(index);
+        });
+
+
+
+        //监听侧边导航点击 应用切换
+        element.on('nav(navFilter)', function(elem){
+            console.log(elem);
+            var appId = elem.attr("data-id");
+            if (appId !== undefined) {
+                window.location.href = "index.html?appId="+appId;
+                return;
+            }
+        });
+
+    });
+</script>

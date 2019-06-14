@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.service.mapper.IAlarmHistoryMapper">
+
+    <resultMap id="AlarmConfigResultMap" type="AlarmHistory">
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="threshold" property="threshold"/>
+        <result column="alarm_rule" property="alarmRule"/>
+        <result column="actual_num" property="actualNum"/>
+        <result column="alarm_message" property="alarmMessage"/>
+        <result column="create_time" property="createTime"/>
+        <result column="receiver_id" property="receiverId"/>
+        <result column="receiver_name" property="receiverName"/>
+    </resultMap>
+
+    <select id="insertOne" parameterType="AlarmHistory">
+        insert into alarm_history_${tableSuffix} (app_id, app_name, threshold, alarm_rule, actual_num, alarm_message, create_time, receiver_id, receiver_name)
+        values (#{appId}, #{appName}, #{threshold}, #{alarmRule}, #{actualNum}, #{alarmMessage}, #{createTime}, #{receiverId}, #{receiverName})
+    </select>
+
+
+
+
+
+</mapper>

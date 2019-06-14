@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.IUserGroupMapper">
+
+    <resultMap id="UserGroupResultMap" type="UserGroup">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="create_time" property="createTime"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="UserGroup">
+        insert into user_group (name, description, create_time) values (#{name}, #{description}, now())
+    </insert>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="UserGroupResultMap">
+        select * from user_group
+    </select>
+
+
+    <select id="selectAll" resultMap="UserGroupResultMap">
+        select * from user_group
+    </select>
+
+    <select id="selectOne" parameterType="Integer" resultMap="UserGroupResultMap">
+        select * from user_group where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="UserGroup">
+        insert into user_group(name, description, create_time) values (#{name}, #{description}, #{createTime})
+    </insert>
+
+    <select id="selectByName" parameterType="java.lang.String" resultMap="UserGroupResultMap">
+        select * from user_group where name = #{name} limit 1 offset 0
+    </select>
+
+</mapper>

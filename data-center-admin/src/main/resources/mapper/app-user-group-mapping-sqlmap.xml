@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.IAppUserGroupMappingMapper">
+
+    <resultMap id="AppUserGroupMappingResultMap" type="AppUserGroupMapping">
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="user_group_id" property="userGroupId"/>
+        <result column="user_group_name" property="userGroupName"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="AppUserGroupMappingResultMap">
+        select * from app_user_group_mapping
+        <where>
+            <if test="appId != null">
+                app_id = #{appId}
+            </if>
+            <if test="userGroupId != null">
+                and user_group_id = #{userGroupId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertOne" parameterType="AppUserGroupMapping">
+        insert into app_user_group_mapping(app_id, app_name, user_group_id, user_group_name)
+        values (#{appId}, #{appName}, #{userGroupId}, #{userGroupName})
+    </insert>
+
+    <select id="selectByAppIdAndGroupId" parameterType="java.util.HashMap" resultMap="AppUserGroupMappingResultMap">
+        select * from app_user_group_mapping where app_id = #{appId} and user_group_id = #{userGroupId}
+    </select>
+
+    <select id="selectByGroupIds" parameterType="java.util.HashMap" resultMap="AppUserGroupMappingResultMap">
+        select * from app_user_group_mapping where user_group_id in (${groupIds})
+    </select>
+
+    <select id="selectByAppIds" parameterType="java.util.HashMap" resultMap="AppUserGroupMappingResultMap">
+        select * from app_user_group_mapping where app_id in (${appIds})
+    </select>
+
+    <delete id="deleteMapping" parameterType="java.util.HashMap">
+        delete from app_user_group_mapping where app_id = #{appId} and user_group_id = #{userGroupId}
+    </delete>
+
+</mapper>

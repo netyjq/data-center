@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.service.mapper.IApiInvokeRecordMapper">
+
+    <resultMap id="ApiInvokeRecordResultMap" type="ApiInvokeRecord">
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="sql_id" property="sqlId"/>
+        <result column="sqltext" property="sqltext"/>
+        <result column="request_time" property="requestTime"/>
+        <result column="request_param" property="requestParam"/>
+        <result column="response_time" property="responseTime"/>
+        <result column="cost" property="cost"/>
+        <result column="success" property="success"/>
+        <result column="processed" property="processed"/>
+        <result column="processed_time" property="processedTime"/>
+        <result column="error_detail" property="errorDetail"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="ApiInvokeRecord">
+        insert into api_invoke_record_${tableSuffix} (app_id, app_name, sql_id, sqltext, request_time, request_param,
+            response_time, cost, success, processed, processed_time, error_detail) values (#{appId}, #{appName},
+            #{sqlId}, #{sqltext}, #{requestTime}, #{requestParam}, #{responseTime}, #{cost}, #{success}, #{processed},
+            #{processedTime}, #{errorDetail})
+    </insert>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="ApiInvokeRecordResultMap">
+        select * from api_invoke_record_${tableSuffix} where processed = #{processed} and app_id in (${appIdListStr})
+    </select>
+
+    <update id="updateOne" parameterType="ApiInvokeRecord">
+        update api_invoke_record_${tableSuffix} set processed = #{processed}, processed_time = #{processedTime} where id = #{id}
+    </update>
+
+</mapper>

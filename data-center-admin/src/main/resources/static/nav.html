@@ -1,0 +1,85 @@
+<li class="layui-nav-item layui-nav-itemed">
+    <a class="" href="javascript:;">SQL管理</a>
+    <dl class="layui-nav-child" id="appList">
+
+    </dl>
+</li>
+<li class="layui-nav-item layui-nav-itemed">
+    <a class="">权限管理</a>
+    <dl class="layui-nav-child" id="group">
+        <dd><a href="user-group.html"><i class="layui-icon layui-icon-group"></i> 用户组</a></dd>
+<!--        <dd><a href="appinfo.html"><i class="layui-icon layui-icon-group"></i> 应用</a></dd>-->
+    </dl>
+</li>
+<li class="layui-nav-item layui-nav-itemed">
+    <a class="" href="javascript:;">告警管理</a>
+    <dl class="layui-nav-child" id="alarmConfig">
+        <dd><a href="alarm-config.html"><i class="layui-icon">&#xe614;</i> 告警配置</a></dd>
+        <dd><a href="alarm-history.html"><i class="layui-icon">&#xe60e;</i> 告警历史</a></dd>
+    </dl>
+</li>
+<li class="layui-nav-item layui-nav-itemed">
+    <a class="" href="javascript:;">数据报表</a>
+    <dl class="layui-nav-child" id="data-statistics">
+        <dd><a href="api-invoke-record.html"><i class="layui-icon">&#xe60a;</i> 请求流水</a></dd>
+    </dl>
+</li>
+
+<script>
+    var GLOBAL_APPS = [];
+    var REQUEST_AJAX = {};
+    var REQUEST = {};
+    REQUEST_AJAX.get = function(url, jsonstr, callback) {
+        $.ajax({url: url, async: false, data: jsonstr, success: function (data) {
+                if (typeof data === 'string') {
+                    data = JSON.parse(data)
+                }
+                if (data.result === 1001) {
+                    window.location = "/login.html";
+                    return;
+                }
+                if (data.result !== 200) {
+                    layer.msg(data.message);
+                    return;
+                }
+                callback(data);
+            }
+        });
+    };
+    function logout() {
+        $.cookie("username", null);
+        window.location = "/login.html";
+    }
+    var username = $.cookie("token");
+    if (username == undefined) {
+        window.location = "/login.html";
+    }
+    $("#username").text(username.split(":")[0]);
+
+    // 加载应用
+    REQUEST_AJAX.get("/appinfo/list/", null, function (data) {
+        var apps = data.data;
+        GLOBAL_APPS = apps;
+        if (apps === undefined || apps.length === 0) {
+            layer.msg("暂无数据");
+            return;
+        }
+        for (var i in apps) {
+            $("#appList").append("<dd data-id='"+apps[i].id+"'><a data-type='app' data-id='"+apps[i].id+"' href='javascript:;'><i class='layui-icon'>&#xe653;</i> "+apps[i].name+"</a></dd>");
+        }
+        REQUEST.appId = apps[0].id;
+    });
+
+    function getUrlVars() {
+        var vars = [], hash;
+        var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+        for(var i = 0; i < hashes.length; i++)
+        {
+            hash = hashes[i].split('=');
+            vars.push(hash[0]);
+            vars[hash[0]] = hash[1];
+        }
+        return vars;
+    }
+
+</script>

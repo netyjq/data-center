@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.IUserInfoMapper">
+
+    <resultMap id="UserInfoResultMap" type="UserInfo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="last_login" property="lastLogin"/>
+        <result column="role_type" property="roleType"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="UserInfoResultMap">
+        select * from user_info
+        <where>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertOne" parameterType="UserInfo">
+        insert into user_info (name, email, last_login, role_type) values (#{name}, #{email}, #{lastLogin}, #{roleType})
+    </insert>
+
+    <update id="updateOne" parameterType="UserInfo">
+        update user_info set last_login = #{lastLogin} where id = #{id}
+    </update>
+
+    <select id="selectAll" resultMap="UserInfoResultMap">
+        select * from user_info
+    </select>
+
+    <select id="selectByGroupId" parameterType="java.util.HashMap" resultMap="UserInfoResultMap">
+        select * from user_info where id in (select user_id from user_group_mapping where user_group_id = #{userGroupId})
+    </select>
+
+    <select id="selectByName" parameterType="java.lang.String" resultMap="UserInfoResultMap">
+        select * from user_info where name = #{name} limit 1 offset 0
+    </select>
+
+</mapper>

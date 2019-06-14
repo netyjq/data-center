@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.ISqlTemplateMapper">
+
+    <resultMap id="SqlTemplateResultMap" type="SqlTemplate">
+        <result column="id" property="id"/>
+        <result column="sqltext" property="sqltext"/>
+        <result column="description" property="description"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="enable_status" property="enableStatus"/>
+        <result column="paging" property="paging"/>
+        <result column="parameter_mapping" property="parameterMapping"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_id" property="createId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_id" property="updateId"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="SqlTemplateResultMap">
+        select * from sql_template
+        <where>
+            <if test="appId != null">
+                app_id = #{appId}
+            </if>
+            <if test="enableStatus != null">
+                and enable_status = #{enableStatus
+            </if>
+            <if test="paging != null">
+                and paging = #{paging}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectOne" parameterType="java.lang.String" resultMap="SqlTemplateResultMap">
+        select * from sql_template where id = #{id}
+    </select>
+
+    <insert id="insertOne" parameterType="SqlTemplate">
+        insert into sql_template(
+            id, sqltext, description, app_id, app_name, enable_status, paging, parameter_mapping,
+                create_time, create_name, create_id) values (
+            #{id}, #{sqltext}, #{description}, #{appId}, #{appName}, #{enableStatus}, #{paging}, #{parameterMapping},
+                #{createTime}, #{createName}, #{createId}
+        )
+    </insert>
+
+
+    <update id="updateOne" parameterType="SqlTemplate">
+        update sql_template
+        <set>
+            parameter_mapping = #{parameterMapping},
+            <if test="sqltext != null and sqltext != ''">
+                sqltext = #{sqltext},
+            </if>
+            <if test="enableStatus != null">
+                enable_status = #{enableStatus},
+            </if>
+            <if test="paging != null">
+                paging = #{paging},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="updateName != null and updateName != ''">
+                update_name = #{updateName},
+            </if>
+            <if test="updateId != null">
+                update_id = #{updateId},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+
+</mapper>

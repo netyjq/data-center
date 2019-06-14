@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.IAppInfoMapper">
+
+    <resultMap id="AppInfoResultMap" type="AppInfo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="AppInfoResultMap">
+        select * from app_info
+        <where>
+            id > 0
+            <if test="appIdList != null and !appIdList.isEmpty">
+                and id in
+                <foreach collection="appIdList" open="(" close=")" item="appId" separator=",">
+                    #{appId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOne" resultMap="AppInfoResultMap" parameterType="java.lang.Integer">
+        select * from app_info where id = #{id}
+    </select>
+
+
+    <select id="selectAll" resultMap="AppInfoResultMap">
+        select * from app_info where id > 0
+    </select>
+
+    <insert id="insertOne" parameterType="AppInfo">
+        insert into app_info (name, create_time) values (#{name}, #{createTime})
+    </insert>
+
+</mapper>

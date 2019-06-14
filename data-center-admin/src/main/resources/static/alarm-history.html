@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>告警历史</title>
+    <link href="layui/css/layui.css" rel="stylesheet">
+    <meta charset="utf-8">
+</head>
+<body class=>
+<div class="layui-layout">
+    <!-- 通用导航 -->
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="layui-header  layui-bg-cyan">
+            <div class="layui-logo">317护数据中心后台系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;" id="username">
+                        钱多多
+                    </a>
+                </li>
+                <li class="layui-nav-item" onclick="logout()"><a href="javascript:;">退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-cyan">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" id="nav" lay-filter="navFilter">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div id="body" style="padding: 10px;">
+                <!-- 内容主体区域 -->
+                    <form class="layui-form" action="" id="selectForm">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="text-align: left">筛选应用</label>
+                            <div class="layui-input-inline">
+                                <select name="modules" id="appSelect" lay-filter="appFilter" lay-verify="required" lay-search="">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            Copyright. Since 2019-05 by yejq
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+<script type="text/html" id="ruleTemplate">
+    {{#  if(d.alarmRule === 1){ }}
+    SLOW_COUNT
+    {{#  } }}
+    {{#  if(d.alarmRule === 2){ }}
+    ERROR_COUNT
+    {{#  } }}
+</script>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    $("#nav").load("nav.html");
+    layui.use(['element', 'layer', 'table', 'form', 'laypage'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var element = layui.element;
+        var form = layui.form;
+        var laypage = layui.laypage;
+        element.render('nav');
+        $("#alarmConfig").find("dd:eq(1)").addClass("layui-this");
+
+        var request = {};
+
+
+
+        // 为下拉框初始化应用列表
+        REQUEST_AJAX.get("/appinfo/list", null, function (data) {
+            for (var i in data.data) {
+                var app = data.data[i];
+                $("#appSelect").append("<option value='"+app.id+"'>"+app.name+"</option>");
+                $("#appId").append("<option value='"+app.id+"'>"+app.name+"</option>");
+            }
+            request.appId = data.data[0].id;
+            form.render('select');
+        });
+
+        // 加载告警配置表格
+        var tableIns = table.render({
+            elem: '#dataTable'
+            , url: '/alarm-history/page'
+            , where: request
+            , page: true
+            , cols: [[
+                {field: 'id', title: 'id', sort: true}
+                , {field: 'appName', title: '应用名称'}
+                , {field: 'alarmRule', title: '规则', width: 135, templet: "#ruleTemplate"}
+                , {field: 'threshold', title: '阈值'}
+                , {field: 'actualNum', title: '实际值'}
+                , {field: 'receiverName', title: '收件人'}
+                , {field: 'alarmMessage', title: '告警信息'}
+                , {field: 'createTime', title: '创建时间', sort: true}
+            ]]
+        });
+
+
+        // 监听应用筛选
+        form.on('select(appFilter)', function(data){
+            request.appId = data.value;
+            tableIns.reload({
+                where: request
+            });
+        });
+
+
+        //监听侧边导航点击 应用切换
+        element.on('nav(navFilter)', function (elem) {
+            console.log(elem);
+            var appId = elem.attr("data-id");
+            if (appId !== undefined) {
+                window.location.href = "index.html?appId=" + appId;
+                return;
+            }
+        });
+
+    });
+</script>

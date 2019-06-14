@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.IAlarmConfigMapper">
+
+    <resultMap id="AlarmConfigResultMap" type="AlarmConfig">
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="create_id" property="createId"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_id" property="updateId"/>
+        <result column="update_name" property="updateName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="threshold" property="threshold"/>
+        <result column="rule" property="rule"/>
+        <result column="user_group_id" property="userGroupId"/>
+        <result column="user_group_name" property="userGroupName"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="AlarmConfigResultMap">
+        select * from alarm_config
+        <where>
+            <if test="appId != null">
+                app_id = #{appId}
+            </if>
+            <if test="rule != null">
+                and rule = #{rule}
+            </if>
+            <if test="userGroupId != null">
+                and user_group_id = #{userGroupId}
+            </if>
+        </where>
+        order by create_time desc , update_time desc
+    </select>
+
+
+    <insert id="insertOne" parameterType="AlarmConfig">
+        insert into alarm_config(app_id, app_name, create_id, create_name, create_time, update_id, update_name, threshold, rule,
+            user_group_id, user_group_name)
+        values (
+            #{appId}, #{appName}, #{createId}, #{createName}, now(), #{updateId}, #{updateName}, #{threshold}, #{rule},
+            #{userGroupId}, #{userGroupName}
+        )
+    </insert>
+
+
+    <update id="updateOne" parameterType="AlarmConfig">
+        update alarm_config
+        <set>
+            <if test="updateId != null">
+                update_id = #{updateId},
+            </if>
+            <if test="updateName != null and updateName != ''">
+                update_name = #{updateName},
+            </if>
+            <if test="threshold != null">
+                threshold = #{threshold},
+            </if>
+            <if test="rule != null">
+                rule = #{rule},
+            </if>
+            update_time = now()
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <delete id="deleteOne" parameterType="java.lang.Integer">
+        delete from alarm_config where id = #{id}
+    </delete>
+
+    <select id="selectOne" parameterType="java.lang.Integer" resultMap="AlarmConfigResultMap">
+        select * from alarm_config where id = #{id}
+    </select>
+
+
+</mapper>

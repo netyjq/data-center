@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.service.mapper.ISqlTemplateMapper">
+
+    <resultMap id="SqlTemplateResultMap" type="SqlTemplate">
+        <result column="id" property="id"/>
+        <result column="sqltext" property="sqltext"/>
+        <result column="description" property="description"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="enable_status" property="enableStatus"/>
+        <result column="paging" property="paging"/>
+        <result column="parameter_mapping" property="parameterMapping"/>
+        <result column="create_time" property="createTime"/>
+        <result column="create_name" property="createName"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="update_name" property="updateName"/>
+    </resultMap>
+
+    <select id="selectOne" resultMap="SqlTemplateResultMap">
+        <choose>
+            <when test="appId == 0">
+                select id, 0 as app_id, '默认应用' as app_name, sqltext, paging, parameter_mapping from sql_template where
+                id = #{sqlTemplateId} and enable_status = 0
+            </when>
+            <otherwise>
+                select id, app_id, app_name, sqltext, paging, parameter_mapping from sql_template where
+                id = #{sqlTemplateId} and app_id = #{appId} and enable_status = 0
+            </otherwise>
+        </choose>
+    </select>
+
+</mapper>

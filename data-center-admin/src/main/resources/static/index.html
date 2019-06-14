@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>数据中心</title>
+    <link href="layui/css/layui.css" rel="stylesheet">
+    <meta charset="utf-8">
+</head>
+<body class=>
+<div class="layui-layout">
+    <!-- 通用导航 -->
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="layui-header  layui-bg-cyan">
+            <div class="layui-logo">数据中心后台系统</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;" id="username">
+                        钱多多
+                    </a>
+                </li>
+                <li class="layui-nav-item" onclick="logout()"><a href="javascript:;">退出</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-cyan">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" id="nav" lay-filter="navFilter">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div id="body" style="padding: 10px;">
+                <!-- 内容主体区域 -->
+                <table class="layui-hide" id="dataTable" lay-filter="dataTable"></table>
+
+                <script type="text/html" id="operationBar">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="look">变更记录</a>
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="test">测试</a>
+                </script>
+            </div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            Copyright. Since 2019-05 by yejq
+        </div>
+
+        <!-- 新增表单 -->
+        <form class="layui-form" action="" id="insertFrom" style="display: none; padding: 20px;">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <input type="text" name="description" autocomplete="off" placeholder="一句话描述这条sql干嘛用的 20字以内"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">SQL模板</label>
+                <div class="layui-input-block">
+                    <textarea name="sqltext" placeholder="动态查询条件需使用freemarker模板编写。举个栗子: SELECT * from unit_info where 1=1 <#if parentId??>and parent_id = #{parentId}</#if> <#if name?? && name != ''>and name = #{name}</#if>
+" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">表字段映射</label>
+                <div class="layui-input-block">
+                    <textarea name="parameterMapping" placeholder="JSON格式(双引号)举个栗子： {&quot;app_name&quot;:&quot;appName&quot;}  表示数据库查出来的app_name字段名称转化为appName"
+                              class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">分页</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="paging" value="0" title="分页" checked="">
+                    <input type="radio" name="paging" value="-1" title="不分页">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="insert">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- 更新表单 -->
+        <form class="layui-form" action="" id="updateForm" style="display: none; padding: 20px;">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">ID</label>
+                <div class="layui-input-block">
+                    <input type="text" name="id" autocomplete="off" disabled="disabled" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block">
+                    <input type="text" name="description" autocomplete="off" placeholder="一句话描述这条sql干嘛用的 20字以内"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">SQL模板</label>
+                <div class="layui-input-block">
+                    <textarea name="sqltext" placeholder="动态查询条件需使用freemarker模板编写。举个栗子: SELECT * from unit_info where 1=1 <#if parentId??>and parent_id = <#noparse>#{parentId}</#noparse></#if> <#if name?? && name != ''>and name = <#noparse>#{name}</#noparse></#if>
+" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">表字段映射</label>
+                <div class="layui-input-block">
+                    <textarea name="parameterMapping" placeholder="JSON格式(双引号)举个栗子： {&quot;app_name&quot;:&quot;appName&quot;}  表示数据库查出来的app_name字段名称转化为appName"
+                              class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">分页</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="paging" value="0" title="分页" checked="">
+                    <input type="radio" name="paging" value="-1" title="不分页">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" lay-submit="" lay-filter="update">立即提交</button>
+                </div>
+            </div>
+
+        </form>
+
+        <!-- 测试表单 -->
+        <form class="layui-form" action="" id="testForm" style="display: none; padding: 20px;">
+
+            <div class="layui-form-item">
+                <p>接口描述: <span class="layui-word-aux" name="description"></span></p>
+                <br>
+                <p>分页: <span class="layui-word-aux" name="paging"></span></p>
+                <br>
+                <p>sqlId: <span class="layui-word-aux" name="sqlId"></span></p>
+                <br>
+                <p>SQL模板: <span class="layui-word-aux" name="sqltext"></span></p>
+                <br>
+                <p>表字段映射: <span class="layui-word-aux" name="parameterMapping"></span></p>
+                <br>
+                <p>入参: </p>
+                <br>
+                <textarea name="filters" placeholder="sql模板渲染后使用到 #{} 或者 ${} 变量引用，则必须传递参数" class="layui-textarea"></textarea>
+                <br>
+                <p>response: </p>
+                <br>
+                <textarea name="response" class="layui-textarea"></textarea>
+            </div>
+
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="test">提交测试</button>
+                <span style="color: red">注意：测试过程中发生的异常不会触发告警</span>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+<form class="layui-form" action="" id="form" style="display: none; padding: 20px;">
+    <table class="layui-hide" id="recordTable" lay-filter="recordTable"></table>
+</form>
+<script type="text/html" id="pagingTpl">
+    {{#  if(d.paging === 0){ }}
+    <span style="font-weight: bold; color: #1E9FFF;">true</span>
+    {{#  } }}
+    {{#  if(d.paging === -1){ }}
+    <span style="font-weight: bold; color: #8D8D8D">false</span>
+    {{#  } }}
+</script>
+
+<script type="text/html" id="typeTpl">
+    {{#  if(d.type === 1){ }}
+    新增
+    {{#  } }}
+    {{#  if(d.type === 2){ }}
+    更新
+    {{#  } }}
+    {{#  if(d.type === 3){ }}
+    删除
+    {{#  } }}
+</script>
+
+<script type="text/html" id="pageBeforeTpl">
+    {{#  if(d.pageBefore === 0){ }}
+    true
+    {{#  } }}
+    {{#  if(d.pageBefore === -1){ }}
+    false
+    {{#  } }}
+</script>
+
+<script type="text/html" id="pageAfterTpl">
+    {{#  if(d.pageAfter === 0){ }}
+    true
+    {{#  } }}
+    {{#  if(d.pageAfter === -1){ }}
+    false
+    {{#  } }}
+</script>
+
+<script type="text/html" id="sqlTpl">
+    {{d.sqltext }}
+</script>
+
+<script id="headToolBar" type="text/html">
+    <div class="layui-table-tool-temp">
+        <div class="layui-btn layui-btn-xs layui-btn-normal"  lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i> 添加SQL模板
+        </div>
+    </div>
+</script>
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/jquery.cookie.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    $("#nav").load("nav.html");
+    layui.use(['element', 'layer', 'table', 'form'], function () {
+        var layer = layui.layer;
+        var table = layui.table;
+        var element = layui.element;
+        var form = layui.form;
+        var recordTable;
+
+        // 侧边导航选中 默认选中第一个应用
+        var clickedAppId = getUrlVars()['appId'];
+        element.render("nav");
+        if (clickedAppId == undefined) {
+            $("#appList").find("dd:eq(0)").addClass("layui-this");
+        } else {
+            $("dd[data-id=" + clickedAppId + "]").addClass("layui-this");
+            REQUEST.appId = clickedAppId;
+        }
+
+        //监听侧边导航点击 应用切换
+        element.on('nav(navFilter)', function (elem) {
+            console.log(elem);
+            var appId = elem.attr("data-id");
+            if (appId === undefined || appId === "") {
+                return;
+            }
+            REQUEST.appId = appId;
+            tableIns.reload({
+                where: REQUEST
+            });
+        });
+
+
+        // 加载表格
+        var tableIns = table.render({
+            elem: '#dataTable'
+            , url: '/sqltemplate/list'
+            , where: REQUEST
+            , toolbar: '#headToolBar',
+            cols: [[
+                {field: 'id', title: 'sqlId', width: 150}
+                , {field: 'sqltext', title: 'sql模板', width: 250, templet: '#sqlTpl'}
+                , {field: 'description', title: '简介'}
+                , {field: 'paging', title: '分页', width: 65, templet: '#pagingTpl'}
+                , {field: 'parameterMapping', title: '出参映射', width: 200}
+                , {field: 'updateTime', title: '更新时间', sort: true, width: 165}
+                , {field: 'updateName', title: '更新人', width: 80}
+                , {fixed: 'right', title: 'operation', toolbar: '#operationBar', width: 185}
+            ]]
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(dataTable)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id)
+                , data = checkStatus.data; //获取选中的数据
+            switch (obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 1,
+                        title: '添加SQL模板',
+                        area: ['800px', '500px'],
+                        content: $("#insertFrom")
+                    });
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(dataTable)', function (object) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var data = object.data //获得当前行数据
+                , layEvent = object.event; //获得 lay-event 对应的值
+            var obj = data;
+            if (layEvent === 'edit') {
+                console.log(obj);
+                $("#updateForm").find("input[name='id']").val(obj.id);
+                var sqltext = obj.sqltext.replace(new RegExp("&lt;", "gm"), "<").replace(new RegExp("&gt;", "gm"), ">");
+                $("#updateForm").find("textarea[name='sqltext']").val(sqltext);
+                $("#updateForm").find("textarea[name='parameterMapping']").val(obj.parameterMapping);
+                $("#updateForm").find("input[name='description']").val(obj.description);
+                $("#updateForm").find("input[name='paging'][value='" + obj.paging + "']").attr("checked", "checked");
+                form.render();
+                layer.open({
+                    type: 1,
+                    title: '编辑SQL模板',
+                    area: ['800px', '600px'],
+                    content: $("#updateForm")
+                });
+            } else if (layEvent === 'look') {
+                // 加载操作记录表格
+                layer.open({
+                    type: 1,
+                    title: '变更记录',
+                    area: ['1200px', '600px'],
+                    content: $("#form")
+                });
+
+                // 加载用户表格
+                recordTable = table.render({
+                    elem: '#recordTable'
+                    , url: '/sql-operation-record/page'
+                    , where: {"sqlId": data.id}
+                    , page: true
+                    , cols: [[
+                        {field: 'sqltextBefore', title: '(前)sql模板'}
+                        , {field: 'sqltextAfter', title: '(后)sql模板'}
+                        , {field: 'pageBefore', title: '(前)分页', templet: '#pageBeforeTpl'}
+                        , {field: 'pageAfter', title: '(后)分页', templet: '#pageAfterTpl'}
+                        , {field: 'parameterMappingBefore', title: '(前)表字段映射'}
+                        , {field: 'parameterMappingAfter', title: '(后)表字段映射'}
+                        , {field: 'type', title: '操作类型', width: 100, templet: '#typeTpl'}
+                        , {field: 'operatorName', title: '操作人'}
+                        , {field: 'createTime', title: '操作时间'}
+                    ]]
+                });
+            } else if (layEvent == 'test') {
+                // sql测试
+                var sqltext = obj.sqltext.replace(new RegExp("&lt;", "gm"), "<").replace(new RegExp("&gt;", "gm"), ">");
+                $("#testForm").find("span[name='description']").text(obj.description);
+                $("#testForm").find("span[name='paging']").text(obj.paging === -1? "不分页":"分页");
+                $("#testForm").find("span[name='sqlId']").text(obj.id);
+                $("#testForm").find("span[name='sqltext']").text(sqltext);
+                $("#testForm").find("span[name='parameterMapping']").text(obj.parameterMapping=== null || obj.parameterMapping===""?"无":obj.parameterMapping);
+                layer.open({
+                    type: 1,
+                    title: '接口测试',
+                    area: ['820px', '620px'],
+                    content: $("#testForm")
+                });
+                $("#testForm").find("textarea[name='filters']").val("");
+                $("#testForm").find("textarea[name='response']").val("");
+            }
+        });
+
+        /**
+         * 新增SQL模板
+         */
+        form.on('submit(insert)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            request.appId = REQUEST.appId;
+
+            console.log(request) //当前容器的全部表单字段，名值对形式：{name: value}
+            REQUEST_AJAX.get("/sqltemplate/insert", request, function (data) {
+                layer.msg("添加成功", {icon: 1, time: 1000});
+                layer.closeAll();
+                tableIns.reload({
+                    where: REQUEST
+                });
+            });
+            layer.close(index);
+        });
+
+        /**
+         * 更新SQL模板
+         */
+        form.on('submit(update)', function (data) {
+            var index = layer.load(2);
+            var request = data.field;
+            request.appId = REQUEST.appId;
+            console.log(request) //当前容器的全部表单字段，名值对形式：{name: value}
+            REQUEST_AJAX.get("/sqltemplate/update", request, function (data) {
+                layer.msg("更新成功", {icon: 1, time: 1000});
+                layer.closeAll();
+                tableIns.reload({
+                    where: REQUEST
+                });
+            });
+            layer.close(index);
+        });
+
+        /**
+         * 提交sql测试
+         */
+        form.on('submit(test)', function (data) {
+            var index = layer.load(2);
+            var request = {};
+            var url;
+            var paging = $("#testForm").find("span[name='paging']").text();
+            if (paging == "不分页") {
+                url = "/dubbo/test/list";
+            } else {
+                url = "/dubbo/test/page";
+                request.pageNum=1;
+                request.pageSize=10
+            }
+            var filters = data.field.filters;
+            request.appId = 0;
+            request.sqlId = $("#testForm").find("span[name='sqlId']").text();
+            if (filters !== "") {
+                request.filters = JSON.parse(filters);
+            }
+            $.ajax({
+                url: url,
+                async: false,
+                type: "post",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify(request),
+                success: function (data) {
+                    if (data.success === false) {
+                        layer.msg(data.errorMessage, {time: 5000});
+                    } else {
+                        layer.msg("请求成功");
+                    }
+                    $("#testForm").find("textarea[name='response']").val("");
+                    $("#testForm").find("textarea[name='response']").val(JSON.stringify(data.object));
+                }
+            });
+            layer.close(index);
+        });
+
+
+    });
+</script>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yjq.data.admin.mapper.IApiInvokeRecordMapper">
+
+    <resultMap id="ApiInvokeRecordResultMap" type="ApiInvokeRecord">
+        <result column="id" property="id"/>
+        <result column="app_id" property="appId"/>
+        <result column="app_name" property="appName"/>
+        <result column="sql_id" property="sqlId"/>
+        <result column="sqltext" property="sqltext"/>
+        <result column="request_param" property="requestParam"/>
+        <result column="request_time" property="requestTime"/>
+        <result column="response_time" property="responseTime"/>
+        <result column="cost" property="cost"/>
+        <result column="success" property="success"/>
+        <result column="processed" property="processed"/>
+        <result column="processed_time" property="processedTime"/>
+        <result column="error_detail" property="errorDetail"/>
+    </resultMap>
+
+    <select id="selectList" parameterType="java.util.HashMap" resultMap="ApiInvokeRecordResultMap">
+        select * from api_invoke_record_${tableSuffix}
+        <where>
+            <if test="sqlId != null">
+                sql_id = #{sqlId}
+            </if>
+            <if test="appId != null">
+                and app_id = #{appId}
+            </if>
+        </where>
+        order by request_time desc
+    </select>
+
+
+</mapper>
