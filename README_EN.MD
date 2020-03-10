@@ -1,3 +1,7 @@
+
+[中文文档](https://github.com/netyjq/data-center/blob/master/README.md)
+
+
 ## PROJECT PROFILE
 
 An implementation of arbitrary SQL (dynamic/static) execution, unified management, exception monitoring data query project.
@@ -23,14 +27,14 @@ To achieve a set of modern data center query platform, the business side to main
 
 4. Report statistics
 
-5....
+5. ...
 
 
 ## SOLUTION
 
 ### DESIGN
 
-! [] (script/design. JPG)
+![](script/design.JPG)
 
 
 ### TECHNICAL SOLUTION
@@ -83,7 +87,7 @@ SELECT * from unit_info where 1=1 and parent_id =1
 
 
 
-! [table structure design](script/table.jpg)
+![](script/table.jpg)
 
 
 
@@ -151,10 +155,10 @@ The data center records each call request to pave the way for future report stat
 
 ## PREVIEW
 
-![login page](script/login.png)
+![LOGIN_PAGE](script/login.png)
 
 
-![page] (script/index. PNG)
+![INDEX](script/index.png)
 
 
 ## RISK POINTS

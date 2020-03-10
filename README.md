@@ -1,3 +1,6 @@
+
+[English Document](https://github.com/netyjq/data-center/blob/master/README_EN.md)
+
 ## 项目简介
 
 一个能实现任意sql(动态/静态)执行、统一管理、异常监控的数据查询中台项目，包含前后端，可直接打包运行。
