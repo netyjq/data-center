@@ -1,5 +1,5 @@
 
-[English Document](https://github.com/netyjq/data-center/blob/master/README_EN.md)
+[English Document](https://github.com/netyjq/data-center/blob/master/README_EN.MD)
 
 ## 项目简介
 
