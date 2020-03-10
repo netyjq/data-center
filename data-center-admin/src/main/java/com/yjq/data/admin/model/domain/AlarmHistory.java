@@ -1,6 +1,7 @@
 package com.yjq.data.admin.model.domain;
 
 import com.yjq.data.admin.model.AbstractModel;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * @author netyjq@gmail.com
  * @date 2019-04-26
  */
+@Data
 public class AlarmHistory extends AbstractModel<Integer> {
 
     private Integer id;
@@ -74,84 +76,5 @@ public class AlarmHistory extends AbstractModel<Integer> {
     public AlarmHistory() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getAppId() {
-        return appId;
-    }
-
-    public void setAppId(Integer appId) {
-        this.appId = appId;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public Integer getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(Integer threshold) {
-        this.threshold = threshold;
-    }
-
-    public Integer getAlarmRule() {
-        return alarmRule;
-    }
-
-    public void setAlarmRule(Integer alarmRule) {
-        this.alarmRule = alarmRule;
-    }
-
-    public Integer getActualNum() {
-        return actualNum;
-    }
-
-    public void setActualNum(Integer actualNum) {
-        this.actualNum = actualNum;
-    }
-
-    public String getAlarmMessage() {
-        return alarmMessage;
-    }
-
-    public void setAlarmMessage(String alarmMessage) {
-        this.alarmMessage = alarmMessage;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Integer receiverId) {
-        this.receiverId = receiverId;
-    }
-
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
 }
 

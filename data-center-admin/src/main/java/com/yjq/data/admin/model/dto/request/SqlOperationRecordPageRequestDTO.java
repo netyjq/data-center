@@ -1,5 +1,6 @@
 package com.yjq.data.admin.model.dto.request;
 
+import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotNull;
  * @author netyjq@gmail.com
  * @date 2019-05-13
  */
+@Data
 public class SqlOperationRecordPageRequestDTO extends PageRequestDTO {
 
     /**
@@ -24,25 +26,9 @@ public class SqlOperationRecordPageRequestDTO extends PageRequestDTO {
     @Range(min = 1)
     private Integer limit;
 
-    public String getSqlId() {
-        return sqlId;
-    }
-
-    public void setSqlId(String sqlId) {
-        this.sqlId = sqlId;
-    }
-
-    public Integer getPage() {
-        return page;
-    }
-
     public void setPage(Integer page) {
         this.setPageNum(page);
         this.page = page;
-    }
-
-    public Integer getLimit() {
-        return limit;
     }
 
     public void setLimit(Integer limit) {

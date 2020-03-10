@@ -2,6 +2,7 @@ package com.yjq.data.admin.model.dto.response;
 
 
 import com.yjq.data.admin.model.dto.request.PageRequestDTO;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
  * @date 2017/6/6.
  * @author netyjq@gmail.com
  */
+@Data
 public class PageResponseDTO<T> implements Serializable {
 
     /**

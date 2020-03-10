@@ -9,6 +9,8 @@ import com.yjq.data.admin.common.exception.SessionInvalidException;
 import com.yjq.data.admin.common.validation.MyValidator;
 import com.yjq.data.admin.model.dto.response.ResponseDTO;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.yjq.data.client.api.core.DataQueryErrorEnum;
+import com.yjq.data.client.api.core.DataQueryException;
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +87,11 @@ public class ExceptionConfig {
         writeToClient(ErrorEnum.SESSION_LOST_ERROR.buildMessage(e.getMessage()), e);
     }
 
+    @ExceptionHandler(DataQueryException.class)
+    public void dataQueryException(DataQueryException e) {
+        writeToClient(ErrorEnum.RPC_ERROR.buildMessage(e.getMessage()), e);
+    }
+
 
     /**
      * 绑定异常
@@ -107,6 +114,7 @@ public class ExceptionConfig {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setResult(errorEnum.getCode());
         responseDTO.setMessage(errorEnum.getMsg());
+        responseDTO.setType(errorEnum.name());
         write(JSON.toJSONString(responseDTO), e);
     }
 

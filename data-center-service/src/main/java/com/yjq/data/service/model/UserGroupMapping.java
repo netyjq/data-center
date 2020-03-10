@@ -1,10 +1,13 @@
 package com.yjq.data.service.model;
 
+import lombok.Data;
+
 /**
  * 用户、组之间的映射关系
  * @author netyjq@gmail.com
  * @date 2019-05-05
  */
+@Data
 public class UserGroupMapping {
 
     private Integer id;
@@ -27,27 +30,4 @@ public class UserGroupMapping {
     public UserGroupMapping() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getUserGroupId() {
-        return userGroupId;
-    }
-
-    public void setUserGroupId(Integer userGroupId) {
-        this.userGroupId = userGroupId;
-    }
 }

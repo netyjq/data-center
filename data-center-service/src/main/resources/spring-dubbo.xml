@@ -17,7 +17,7 @@
     <dubbo:protocol name="dubbo" port="20880" />
 
     <!-- 声明需要暴露的服务接口 -->
-    <dubbo:service interface="com.yjq.data.client.api.core.DataQueryInvoker"
+    <dubbo:service interface="com.yjq.data.client.api.invoke.DataQueryInvoker"
                    ref="dataQueryInvoker"
                     version="${spring.dubbo.version}"
                     timeout="5000"/>

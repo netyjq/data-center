@@ -1,6 +1,7 @@
 package com.yjq.data.admin.model.domain;
 
 import com.yjq.data.admin.model.AbstractModel;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * @author netyjq@gmail.com
  * @date 2019-04-26
  */
+@Data
 public class UserGroup extends AbstractModel<Integer> {
 
     private Integer id;
@@ -36,35 +38,4 @@ public class UserGroup extends AbstractModel<Integer> {
         this.description = description;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
 }

@@ -7,14 +7,6 @@ package com.yjq.data.admin.common;
  */
 public class Constant {
 
-    public static final String PUBLIC_KEY = "PUBLIC_KEY";
-
-    public static final String PRIVATE_KEY = "PRIVATE_KEY";
-
-    public static final String API_TOOL_PUBLIC_PRIVATE_KEY = "DATA_STATISTICS_CENTER_PUBLIC_PRIVATE_KEY";
-
-    public static final String LOGIN_KEK_PREFIX = "DATA_STATISTICS_CENTER:";
-
     /**
      * 分表分隔符
      */

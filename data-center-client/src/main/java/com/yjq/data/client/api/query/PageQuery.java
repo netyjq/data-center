@@ -1,6 +1,8 @@
 package com.yjq.data.client.api.query;
 
 
+import lombok.Data;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import java.util.Map;
  * @author netyjq@gmail.com
  * @date 2019/4/22
  */
+@Data
 public class PageQuery extends AbstractQuery {
 
     /**
@@ -33,9 +36,6 @@ public class PageQuery extends AbstractQuery {
         this.pageNum = pageNum;
     }
 
-    public PageQuery() {
-    }
-
     @Override
     public boolean invalid() {
         if (super.getAppId() == null || super.getSqlId() == null || pageNum < 1 || pageSize < 1) {
@@ -44,19 +44,4 @@ public class PageQuery extends AbstractQuery {
         return false;
     }
 
-    public int getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
 }

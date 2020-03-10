@@ -1,6 +1,7 @@
 package com.yjq.data.admin.model.domain;
 
 import com.yjq.data.admin.model.AbstractModel;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * @author netyjq@gmail.com
  * @date 2019-04-26
  */
+@Data
 public class SqlOperationRecord extends AbstractModel<Integer> {
 
     private Integer id;
@@ -68,99 +70,4 @@ public class SqlOperationRecord extends AbstractModel<Integer> {
      */
     private String parameterMappingAfter;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getSqlId() {
-        return sqlId;
-    }
-
-    public void setSqlId(String sqlId) {
-        this.sqlId = sqlId;
-    }
-
-    public Integer getOperatorId() {
-        return operatorId;
-    }
-
-    public void setOperatorId(Integer operatorId) {
-        this.operatorId = operatorId;
-    }
-
-    public String getOperatorName() {
-        return operatorName;
-    }
-
-    public void setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
-    }
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getSqltextBefore() {
-        return sqltextBefore;
-    }
-
-    public void setSqltextBefore(String sqltextBefore) {
-        this.sqltextBefore = sqltextBefore;
-    }
-
-    public String getSqltextAfter() {
-        return sqltextAfter;
-    }
-
-    public void setSqltextAfter(String sqltextAfter) {
-        this.sqltextAfter = sqltextAfter;
-    }
-
-    public Integer getPageBefore() {
-        return pageBefore;
-    }
-
-    public void setPageBefore(Integer pageBefore) {
-        this.pageBefore = pageBefore;
-    }
-
-    public Integer getPageAfter() {
-        return pageAfter;
-    }
-
-    public void setPageAfter(Integer pageAfter) {
-        this.pageAfter = pageAfter;
-    }
-
-    public String getParameterMappingBefore() {
-        return parameterMappingBefore;
-    }
-
-    public void setParameterMappingBefore(String parameterMappingBefore) {
-        this.parameterMappingBefore = parameterMappingBefore;
-    }
-
-    public String getParameterMappingAfter() {
-        return parameterMappingAfter;
-    }
-
-    public void setParameterMappingAfter(String parameterMappingAfter) {
-        this.parameterMappingAfter = parameterMappingAfter;
-    }
 }

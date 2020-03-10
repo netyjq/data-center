@@ -9,4 +9,8 @@
         ${sql}
     </select>
 
+    <select id="selectCount" parameterType="java.util.HashMap" resultType="long">
+        select count(*) from (${sql}) t
+    </select>
+
 </mapper>

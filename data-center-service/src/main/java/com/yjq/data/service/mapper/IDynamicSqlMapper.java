@@ -18,6 +18,13 @@ public interface IDynamicSqlMapper {
      * @param filters 过滤条件
      * @return List<LinkedHashMap>
      */
-    List<LinkedHashMap> selectList(Map<String, Object> filters);
+    List<LinkedHashMap<String, Object>> selectList(Map<String, Object> filters);
+
+    /**
+     * 查询数量
+     * @param filters 过滤条件
+     * @return 数量
+     */
+    long selectCount(Map<String, Object> filters);
 
 }

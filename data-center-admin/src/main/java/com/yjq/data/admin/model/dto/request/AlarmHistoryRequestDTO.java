@@ -1,6 +1,7 @@
 package com.yjq.data.admin.model.dto.request;
 
 import com.yjq.data.admin.common.Constant;
+import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;

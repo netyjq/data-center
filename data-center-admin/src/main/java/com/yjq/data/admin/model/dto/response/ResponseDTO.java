@@ -2,6 +2,7 @@ package com.yjq.data.admin.model.dto.response;
 
 
 import com.yjq.data.admin.common.ErrorEnum;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +12,18 @@ import java.util.Map;
  * @date 2017/2/20.
  * @author netyjq@gmail.com
  */
+@Data
 public class ResponseDTO {
 
     /**
      * 响应code
      */
     private Integer result;
+
+    /**
+     * 错误类型 ref ErrorEnum
+     */
+    private String type;
 
     /**
      * 响应的message
@@ -52,27 +59,4 @@ public class ResponseDTO {
         this.message = ErrorEnum.SUCCESS.getMsg();
     }
 
-    public Integer getResult() {
-        return result;
-    }
-
-    public void setResult(Integer result) {
-        this.result = result;
-    }
-
-    public Object getMessage() {
-        return message;
-    }
-
-    public void setMessage(Object message) {
-        this.message = message;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
 }

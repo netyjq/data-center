@@ -1,5 +1,7 @@
 package com.yjq.data.service.model;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
@@ -7,6 +9,7 @@ import java.util.Date;
  * @author netyjq@gmail.com
  * @date 2019/4/24
  */
+@Data
 public class SqlTemplate {
 
     private String id;
@@ -82,99 +85,4 @@ public class SqlTemplate {
     public SqlTemplate() {
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSqltext() {
-        return sqltext;
-    }
-
-    public void setSqltext(String sqltext) {
-        this.sqltext = sqltext;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getAppId() {
-        return appId;
-    }
-
-    public void setAppId(Integer appId) {
-        this.appId = appId;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public Integer getEnableStatus() {
-        return enableStatus;
-    }
-
-    public void setEnableStatus(Integer enableStatus) {
-        this.enableStatus = enableStatus;
-    }
-
-    public Integer getPaging() {
-        return paging;
-    }
-
-    public void setPaging(Integer paging) {
-        this.paging = paging;
-    }
-
-    public String getParameterMapping() {
-        return parameterMapping;
-    }
-
-    public void setParameterMapping(String parameterMapping) {
-        this.parameterMapping = parameterMapping;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateName() {
-        return createName;
-    }
-
-    public void setCreateName(String createName) {
-        this.createName = createName;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public String getUpdateName() {
-        return updateName;
-    }
-
-    public void setUpdateName(String updateName) {
-        this.updateName = updateName;
-    }
 }

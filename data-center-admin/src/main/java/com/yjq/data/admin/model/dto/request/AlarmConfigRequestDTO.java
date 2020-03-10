@@ -2,6 +2,7 @@ package com.yjq.data.admin.model.dto.request;
 
 import com.yjq.data.admin.common.AlarmRuleEnum;
 import com.yjq.data.admin.common.validation.ValidationMarker;
+import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
  * @author netyjq@gmail.com
  * @date 2019-05-05
  */
+@Data
 public class AlarmConfigRequestDTO extends PageRequestDTO {
 
 
@@ -51,45 +53,5 @@ public class AlarmConfigRequestDTO extends PageRequestDTO {
             return false;
         }
         return true;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getAppId() {
-        return appId;
-    }
-
-    public void setAppId(Integer appId) {
-        this.appId = appId;
-    }
-
-    public Integer getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(Integer threshold) {
-        this.threshold = threshold;
-    }
-
-    public Integer getRule() {
-        return rule;
-    }
-
-    public void setRule(Integer rule) {
-        this.rule = rule;
-    }
-
-    public Integer getUserGroupId() {
-        return userGroupId;
-    }
-
-    public void setUserGroupId(Integer userGroupId) {
-        this.userGroupId = userGroupId;
     }
 }

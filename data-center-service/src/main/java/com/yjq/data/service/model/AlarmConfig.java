@@ -1,10 +1,13 @@
 package com.yjq.data.service.model;
 
+import lombok.Data;
+
 /**
  * 告警配置
  * @author netyjq@gmail.com
  * @date 2019-04-26
  */
+@Data
 public class AlarmConfig {
 
     private Integer id;
@@ -76,91 +79,4 @@ public class AlarmConfig {
     public AlarmConfig() {
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getAppId() {
-        return appId;
-    }
-
-    public void setAppId(Integer appId) {
-        this.appId = appId;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void setAppName(String appName) {
-        this.appName = appName;
-    }
-
-    public Integer getCreateId() {
-        return createId;
-    }
-
-    public void setCreateId(Integer createId) {
-        this.createId = createId;
-    }
-
-    public String getCreateName() {
-        return createName;
-    }
-
-    public void setCreateName(String createName) {
-        this.createName = createName;
-    }
-
-    public Integer getUpdateId() {
-        return updateId;
-    }
-
-    public void setUpdateId(Integer updateId) {
-        this.updateId = updateId;
-    }
-
-    public String getUpdateName() {
-        return updateName;
-    }
-
-    public void setUpdateName(String updateName) {
-        this.updateName = updateName;
-    }
-
-    public Integer getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(Integer threshold) {
-        this.threshold = threshold;
-    }
-
-    public Integer getRule() {
-        return rule;
-    }
-
-    public void setRule(Integer rule) {
-        this.rule = rule;
-    }
-
-    public Integer getUserGroupId() {
-        return userGroupId;
-    }
-
-    public void setUserGroupId(Integer userGroupId) {
-        this.userGroupId = userGroupId;
-    }
-
-    public String getUserGroupName() {
-        return userGroupName;
-    }
-
-    public void setUserGroupName(String userGroupName) {
-        this.userGroupName = userGroupName;
-    }
 }

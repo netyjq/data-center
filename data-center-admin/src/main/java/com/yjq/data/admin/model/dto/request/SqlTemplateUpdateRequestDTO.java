@@ -6,6 +6,7 @@ import com.yjq.data.admin.common.exception.ServiceException;
 import com.yjq.data.admin.model.dto.AbstractDTO;
 import com.google.common.base.Strings;
 import freemarker.template.Template;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
@@ -19,6 +20,7 @@ import java.util.UUID;
  * @author netyjq@gmail.com
  * @date 2019-04-28
  */
+@Data
 public class SqlTemplateUpdateRequestDTO extends AbstractDTO {
 
     /**
@@ -80,43 +82,4 @@ public class SqlTemplateUpdateRequestDTO extends AbstractDTO {
         return true;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSqltext() {
-        return sqltext;
-    }
-
-    public void setSqltext(String sqltext) {
-        this.sqltext = sqltext;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getParameterMapping() {
-        return parameterMapping;
-    }
-
-    public void setParameterMapping(String parameterMapping) {
-        this.parameterMapping = parameterMapping;
-    }
-
-    public Integer getPaging() {
-        return paging;
-    }
-
-    public void setPaging(Integer paging) {
-        this.paging = paging;
-    }
 }

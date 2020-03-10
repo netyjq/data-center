@@ -46,7 +46,7 @@ public enum ErrorEnum {
     /**
      * RPC服务调用异常
      */
-    RPC_ERROR(4000, "系统运行期异常"),
+    RPC_ERROR(4000, "远程服务异常"),
 
     /**
      * 系统未知系统

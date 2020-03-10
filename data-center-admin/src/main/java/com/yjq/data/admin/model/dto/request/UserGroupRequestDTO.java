@@ -2,6 +2,7 @@ package com.yjq.data.admin.model.dto.request;
 
 import com.yjq.data.admin.common.validation.ValidationMarker;
 import com.yjq.data.admin.model.dto.AbstractDTO;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
  * @author netyjq@gmail.com
  * @date 2019-05-05
  */
+@Data
 public class UserGroupRequestDTO extends AbstractDTO {
 
     @NotNull(groups = {ValidationMarker.UpdateGroup.class, ValidationMarker.SelectGroup.class, ValidationMarker.DeleteGroup.class})
@@ -39,43 +41,4 @@ public class UserGroupRequestDTO extends AbstractDTO {
         return false;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(String userIds) {
-        this.userIds = userIds;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 }
