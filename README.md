@@ -42,20 +42,6 @@ SELECT * from unit_info where 1=1 <#if parentId??>and parent_id = #{parentId}</#
 SELECT * from unit_info where 1=1 and parent_id = 1
 ```
 
-#### 表结构设计
-- user_info 用户信息表
-- user_group 用户组
-- user_group_mapping 用户、组关联表
-- app_info 应用表
-- app_user_mapping 应用和用户关联表
-- sql_template sql模板表
-- sql_operation_record sql操作记录表 
-- api_call_record api调用记录表 **分多表**
-- alarm_history 告警记录表 **分多表**
-- alarm_config 告警配置表
-
-![表结构设计](script/table.jpg)
-
 #### 项目模块
 
 1. data-center-admin 管理员后台 部署形式：war
